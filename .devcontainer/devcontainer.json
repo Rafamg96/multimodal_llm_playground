@@ -1,0 +1,22 @@
+{
+	"name": "Existing Dockerfile",
+	"dockerComposeFile": "compose.yml",
+	"service": "app",
+	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+	"features": {},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-python.python",
+				"ms-python.black-formatter",
+				"ms-windows-ai-studio.windows-ai-studio",
+				"GitHub.copilot",
+				"GitHub.copilot-chat",
+				"ms-toolsai.prompty",
+				"ritwickdey.LiveServer",
+				"shd101wyy.markdown-preview-enhanced",
+				"yzhang.markdown-all-in-one"
+			]
+		}
+	}
+}

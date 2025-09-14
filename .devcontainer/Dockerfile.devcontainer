@@ -1,0 +1,51 @@
+FROM python:3.10-slim-bullseye
+
+# Define workdir
+WORKDIR /demoapp
+
+# Copy project files
+COPY api ./api
+COPY pyproject.toml ./pyproject.toml
+COPY README.md ./README.md
+
+
+#####################################################
+############## Set env variables for build ##########
+#####################################################
+
+# Save env variables used in the build docker image
+COPY .devcontainer/init.sh ./tmp/dockerbuild/init.sh
+COPY .devcontainer/devcontainer-build.env  ./tmp/dockerbuild/devcontainer-build.env
+RUN  cd /demoapp/tmp/dockerbuild/ && sed -i 's/\r$//' ./init.sh && . ./init.sh
+RUN rm -rf ./tmp/dockerbuild
+
+# Install ffmpeg to avoid error about audio processing
+RUN apt update -y && apt install -y ffmpeg
+
+#####################################################
+######### Install dependencies using poetry #########
+#####################################################
+# Install poetry
+#RUN pip install --upgrade pip && pip install poetry==1.6.1
+#
+## Install dependencies
+#RUN poetry config virtualenvs.create false
+#RUN poetry install --no-interaction --no-root --with test,dev
+
+#####################################################
+######### Install dependencies using uv ##############
+#####################################################
+# Install uv
+RUN pip install --upgrade pip && pip install uv
+
+# Configure uv env variables
+ENV UV_NO_PROGRESS=1 \
+    UV_CACHE_DIR=/tmp/uv_cache
+
+
+# Install dependencies using uv with private registry authentication
+RUN . ~/.bashrc && \
+    uv pip install --system --index-strategy unsafe-best-match -e .[dev,test] && \
+    rm -rf $UV_CACHE_DIR
+
+EXPOSE 8000
