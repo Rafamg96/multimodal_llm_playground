@@ -380,7 +380,7 @@ class Encode_Markdown_Service(Markdown_Service):
 
     @staticmethod
     def get_markdown_files(directory: str):
-        return glob.glob(os.path.join(directory, "*.md"))
+        return glob.glob(pathname=os.path.join(directory,"**", "*.md"), recursive=True)
 
     def encode_markdowns_using_chunks(
         self, markdown_dir_path: str, collection_name: str
